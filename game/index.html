@@ -2,190 +2,81 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash游戏 - Ruffle播放器</title>
-    <meta name="description" content="使用Ruffle播放器运行Flash游戏">
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <title>the flash</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        /* 内联CSS */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            text-align: center;
+            background: #f0f2f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
         }
-        
         .container {
-            max-width: 850px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            padding: 32px 24px 16px 24px;
             margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-width: 350px;
+            min-height: 340px;
         }
-        
         h1 {
-            color: #333;
-            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: #223;
+            margin-bottom: 18px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 1px;
         }
-        
-        #status {
-            padding: 12px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-weight: bold;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-        }
-        
-        .success {
-            color: #155724;
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-        }
-        
-        .error {
-            color: #721c24;
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-        }
-        
-        .loading {
-            color: #856404;
-            background-color: #fff3cd;
-            border-color: #ffeaa7;
-        }
-        
-        .player-container {
-            margin: 20px auto;
-            display: inline-block;
-        }
-        
-        .info {
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-        }
-        
-        @media (max-width: 850px) {
-            .container {
-                padding: 10px;
-            }
-            
-            ruffle-player {
-                width: 100% !important;
-                height: auto !important;
-                max-width: 100%;
-            }
+        #flash-area {
+            margin: 0 auto;
+            width: 500px;   /* 可在此处修改 SWF 容器尺寸 */
+            height: 375px;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎮 Flash游戏播放器</h1>
-        
-        <!-- 状态提示 -->
-        <div id="status" class="loading">
-            状态：正在初始化Ruffle播放器...
-        </div>
-        
-        <!-- 游戏播放器容器 -->
-        <div class="player-container">
-            <ruffle-player width="800" height="600">
-                <a href="d1.swf"></a>
-            </ruffle-player>
-        </div>
-        
-        <div class="info">
-            <p>使用Ruffle播放器运行Flash内容 - 兼容现代浏览器</p>
-            <p>如果游戏未能加载，请确保d1.swf文件已正确上传</p>
-        </div>
+<div class="container">
+    <h1>测试1</h1>
+    <div id="flash-area">
+        <!-- Ruffle 的播放器实例将插入到这里，这是播放窗口 -->
     </div>
+</div>
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+<script>
+    // 集中参数定义，方便修改
+    const SWF_FILE_PATH = 'd1.swf'; // 需放在与html同目录，就像你现在这样
+    const SWF_WIDTH = 500;          // 播放窗口宽度
+    const SWF_HEIGHT = 375;         // 高度
 
-    <script>
-        // 检测Ruffle播放器状态
-        function checkRuffleStatus() {
-            const player = document.querySelector('ruffle-player');
-            const statusEl = document.getElementById('status');
-            
-            // 清除现有状态类
-            statusEl.classList.remove('loading', 'success', 'error');
-            
-            if (player && player.shadowRoot) {
-                // Ruffle成功加载
-                statusEl.textContent = '✅ Ruffle播放器加载成功，游戏正在运行';
-                statusEl.classList.add('success');
-                
-                // 添加加载完成事件监听
-                player.addEventListener('loaded', () => {
-                    console.log('SWF文件加载完成');
-                });
-                
-                player.addEventListener('error', (e) => {
-                    console.error('SWF加载错误:', e);
-                    statusEl.textContent = '❌ SWF文件加载失败，请检查文件路径';
-                    statusEl.classList.add('error');
-                });
-                
-            } else {
-                // Ruffle加载失败
-                statusEl.textContent = '❌ Ruffle播放器未能正常加载';
-                statusEl.classList.add('error');
-                
-                // 诊断信息
-                console.warn('Ruffle诊断信息:');
-                console.log('window.RufflePlayer 是否存在:', !!window.RufflePlayer);
-                console.log('ruffle-player 元素:', player);
-            }
+    window.addEventListener("DOMContentLoaded", function() {
+        if (!window.RufflePlayer) {
+            document.getElementById('flash-area').innerText = 'Ruffle 加载失败';
+            return;
         }
-        
-        // Ruffle加载事件监听
-        window.RufflePlayer = window.RufflePlayer || {};
-        window.RufflePlayer.config = {
-            autoplay: 'on',
-            unmuteOverlay: 'hidden',
-            backgroundColor: '#000000',
-            splashScreen: true,
-        };
-        
-        // 页面加载后检查
-        window.addEventListener('load', () => {
-            // 初始检查
-            checkRuffleStatus();
-            
-            // 定期检查（应对慢速网络）
-            let checkCount = 0;
-            const maxChecks = 10;
-            const checkInterval = setInterval(() => {
-                const player = document.querySelector('ruffle-player');
-                if (player && player.shadowRoot) {
-                    checkRuffleStatus();
-                    clearInterval(checkInterval);
-                } else if (checkCount >= maxChecks) {
-                    clearInterval(checkInterval);
-                    checkRuffleStatus();
-                }
-                checkCount++;
-            }, 500);
+        const ruffle = window.RufflePlayer.newest();
+        const player = ruffle.createPlayer();
+        player.style.width = SWF_WIDTH + 'px';
+        player.style.height = SWF_HEIGHT + 'px';
+        player.style.background = '#222';
+        player.allowFullscreen = true;
+
+        const flashArea = document.getElementById('flash-area');
+        flashArea.innerHTML = '';
+        flashArea.appendChild(player);
+
+        player.load(SWF_FILE_PATH).catch(e => {
+            flashArea.innerText = '无法加载 SWF 文件：' + e;
         });
-        
-        // 错误处理
-        window.addEventListener('error', (e) => {
-            console.error('全局错误:', e);
-            const statusEl = document.getElementById('status');
-            if (statusEl && !statusEl.classList.contains('success')) {
-                statusEl.textContent = '❌ 发生错误，请查看控制台';
-                statusEl.classList.add('error');
-            }
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
